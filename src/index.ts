@@ -13,10 +13,8 @@ const tado = new Tado({
 
 const test = async () => {
   await tado.login()
+  await tado.createZones()
+  await tado.updateTemperatures()
 }
 
 test()
-
-setInterval(() => {
-  console.log("I'm still running!")
-})
