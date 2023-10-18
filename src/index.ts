@@ -1,21 +1,40 @@
 import 'dotenv/config'
 import tado from './services/tado'
 import telegram from './services/telegram'
+import weather from './services/weather'
+import { settings } from './config'
 
 const initiateTado = async () => {
   await tado.login()
   await tado.createZonesList()
   await tado.updateTemperatures()
-  setInterval(async () => await tado.updateTemperatures(), 1000 * 60 * 5)
+  setInterval(
+    async () => await tado.updateTemperatures(),
+    settings.updateFrequencies.indoorTemps
+  )
 }
 
-const testTelegram = () => {
-  telegram.sendMessage('*bold text*', { markdown: true })
-  telegram.listenFor(/^\/.*/, () => {
-    console.log('Telegram: Detected incoming command')
-    telegram.sendMessage('Hello there!')
-  })
+const initiateWeather = async () => {
+  weather.updateSunTimes()
+  setInterval(
+    () => weather.updateSunTimes(),
+    settings.updateFrequencies.sunTimes
+  )
+  await weather.updateRainForecast()
+  setInterval(
+    async () => await weather.updateRainForecast(),
+    settings.updateFrequencies.rain
+  )
+  await weather.updateTempAndWind()
+  setInterval(
+    async () => await weather.updateTempAndWind(),
+    settings.updateFrequencies.tempAndWind
+  )
 }
 
-initiateTado()
-testTelegram()
+const startApp = async () => {
+  await initiateTado()
+  await initiateWeather()
+}
+
+startApp()

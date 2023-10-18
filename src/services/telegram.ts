@@ -1,5 +1,5 @@
 import TelegramAPI from 'node-telegram-bot-api'
-import constants from '../config'
+import { constants } from '../config'
 
 interface TelegramOptions {
   telegramToken: string

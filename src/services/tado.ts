@@ -1,5 +1,5 @@
 import { Tado as TadoAPI } from 'node-tado-client'
-import constants from '../config'
+import { constants } from '../config'
 
 interface TadoOptions {
   username: string
