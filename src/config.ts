@@ -10,7 +10,7 @@ const constants = {
   TADO_HOME_ID: Number(process.env.TADO_HOME_ID),
   TADO_PASSWORD: process.env.TADO_PASSWORD,
   TADO_USERNAME: process.env.TADO_USERNAME,
-  TADO_ZONES: [5, 1, 7, 3, 6, 2, 0],
+  TADO_ZONES: [5, 1, 7, 3, 6, 2],
 }
 
 export default constants
