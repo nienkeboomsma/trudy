@@ -33,5 +33,6 @@ export const settings = {
     sunTimes: 60 * minute,
     tempAndWind: 10 * minute,
     rain: 5 * minute,
+    windows: 1 * minute,
   },
 }

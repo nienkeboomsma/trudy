@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { tado, weather } from './services'
+import { windows } from './modules'
 import { settings } from './config'
 
 const startApp = async () => {
@@ -9,6 +10,7 @@ const startApp = async () => {
     rain: settings.updateFrequencies.rain,
     tempAndWind: settings.updateFrequencies.tempAndWind,
   })
+  windows.initiate(settings.updateFrequencies.windows)
 }
 
 startApp()
