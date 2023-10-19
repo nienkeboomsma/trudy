@@ -29,10 +29,11 @@ export const settings = {
   morningAzimuth: 125,
   eveningAzimuth: 275,
   updateFrequencies: {
-    indoorTemps: 5 * minute,
-    sunTimes: 60 * minute,
-    tempAndWind: 10 * minute,
-    rain: 5 * minute,
-    windows: 1 * minute,
+    indoorTemps: 5 * minute, // 5
+    sunTimes: 60 * minute, // 60
+    tempAndWind: 10 * minute, // 10
+    rain: 5 * minute, // 5
+    windows: 1 * minute, // 1
+    scheduledMessages: 1 * minute, // 1
   },
 }

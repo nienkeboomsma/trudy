@@ -18,7 +18,7 @@ class Telegram {
   sendMessage(message: string, options?: { markdown?: boolean }) {
     const markdown = options?.markdown ?? false
 
-    console.log(new Date(), 'Telegram: Sending message')
+    console.log(new Date(), `Telegram: Sending '${message}'`)
     this.bot.sendMessage(this.chatId, message, {
       parse_mode: markdown ? 'MarkdownV2' : 'HTML',
     })
