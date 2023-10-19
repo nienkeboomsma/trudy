@@ -100,8 +100,12 @@ class Weather {
       this.latitude,
       this.longitude
     ).dawn
-    this.sunTimes.screensDown = this.getTimeByAzimuth(settings.morningAzimuth)
-    this.sunTimes.screensUp = this.getTimeByAzimuth(settings.eveningAzimuth)
+    this.sunTimes.screensDown = this.getTimeByAzimuth(
+      settings.screens.morningAzimuth
+    )
+    this.sunTimes.screensUp = this.getTimeByAzimuth(
+      settings.screens.eveningAzimuth
+    )
     this.sunTimes.dusk = SunCalc.getTimes(
       currentDate,
       this.latitude,
@@ -113,23 +117,28 @@ class Weather {
   }
 
   async initiate(intervals: {
-    sunTimes: number
-    rain: number
-    tempAndWind: number
+    updateSunTimes: number
+    updateRainForecast: number
+    updateTempAndWind: number
   }) {
-    if (intervals.sunTimes > 0) {
+    if (intervals.updateSunTimes > 0) {
       this.updateSunTimes()
-      setInterval(() => this.updateSunTimes(), intervals.sunTimes)
+      setInterval(() => this.updateSunTimes(), intervals.updateSunTimes)
     }
-    if (intervals.rain > 0) {
+
+    if (intervals.updateRainForecast > 0) {
       await this.updateRainForecast()
-      setInterval(async () => await this.updateRainForecast(), intervals.rain)
+      setInterval(
+        async () => await this.updateRainForecast(),
+        intervals.updateRainForecast
+      )
     }
-    if (intervals.tempAndWind > 0) {
+
+    if (intervals.updateTempAndWind > 0) {
       await this.updateTempAndWind()
       setInterval(
         async () => await this.updateTempAndWind(),
-        intervals.tempAndWind
+        intervals.updateTempAndWind
       )
     }
   }

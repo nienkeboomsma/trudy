@@ -4,14 +4,19 @@ import { windows, scheduledMessages } from './modules'
 import { settings } from './config'
 
 const startApp = async () => {
-  await tado.initiate(settings.updateFrequencies.indoorTemps)
+  await tado.initiate(settings.updateFrequencies.tado.updateIndoorTemps)
+
   await weather.initiate({
-    sunTimes: settings.updateFrequencies.sunTimes,
-    rain: settings.updateFrequencies.rain,
-    tempAndWind: settings.updateFrequencies.tempAndWind,
+    updateSunTimes: settings.updateFrequencies.weather.updateSunTimes,
+    updateRainForecast: settings.updateFrequencies.weather.updateRainForecast,
+    updateTempAndWind: settings.updateFrequencies.weather.updateTempAndWind,
   })
-  windows.initiate(settings.updateFrequencies.windows)
-  scheduledMessages.initiate(settings.updateFrequencies.scheduledMessages)
+
+  windows.initiate(settings.updateFrequencies.windows.checkTemperatures)
+
+  scheduledMessages.initiate(
+    settings.updateFrequencies.scheduledMessages.checkMessageList
+  )
 }
 
 startApp()

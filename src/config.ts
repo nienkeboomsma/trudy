@@ -24,16 +24,33 @@ export const constants = {
 }
 
 const minute = 1000 * 60
+const hour = 60 * minute
 
 export const settings = {
-  morningAzimuth: 125,
-  eveningAzimuth: 275,
+  screens: {
+    morningAzimuth: 125, // 125
+    eveningAzimuth: 275, // 275
+    maxAcceptableWind: 40, // 0
+    maxAcceptableRain: 0, // 0
+  },
   updateFrequencies: {
-    indoorTemps: 5 * minute, // 5
-    sunTimes: 60 * minute, // 60
-    tempAndWind: 10 * minute, // 10
-    rain: 5 * minute, // 5
-    windows: 1 * minute, // 1
-    scheduledMessages: 1 * minute, // 1
+    tado: {
+      updateIndoorTemps: 5 * minute, // 5min
+    },
+    weather: {
+      updateSunTimes: 1 * hour, // 1h
+      updateTempAndWind: 10 * minute, // 10min
+      updateRainForecast: 5 * minute, // 5min
+    },
+    windows: {
+      checkTemperatures: 1 * minute, // 1min
+    },
+    scheduledMessages: {
+      checkMessageList: 1 * minute, // 1min
+    },
+    screens: {
+      setDailyReminders: 6 * hour, // 6h
+      checkWindAndRain: 5 * minute, // 5m
+    },
   },
 }
