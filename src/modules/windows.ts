@@ -20,7 +20,11 @@ class Windows {
     ) {
       console.log(
         new Date(),
-        `Windows: Time to ${this.windowsOpen ? 'close' : 'open'} the windows`
+        `Windows: It is ${tado.temperatures.average}°C indoors and ${
+          weather.weather.temperature
+        }°C outdoors; time to ${
+          this.windowsOpen ? 'close' : 'open'
+        } the windows`
       )
       this.toggleWindows()
     }
