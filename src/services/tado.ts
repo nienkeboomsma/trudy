@@ -72,7 +72,7 @@ class Tado {
     if (interval > 0) {
       await this.login()
       await this.createZonesList()
-      this.updateTemperatures()
+      await this.updateTemperatures()
       setInterval(() => this.updateTemperatures(), interval)
     }
   }
