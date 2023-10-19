@@ -63,6 +63,15 @@ class Tado {
 
     console.log('Tado: Updated temperatures')
   }
+
+  async initiate(interval: number) {
+    if (interval > 0) {
+      await this.login()
+      await this.createZonesList()
+      this.updateTemperatures()
+      setInterval(() => this.updateTemperatures(), interval)
+    }
+  }
 }
 
 export default new Tado({

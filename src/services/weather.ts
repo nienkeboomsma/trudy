@@ -107,6 +107,28 @@ class Weather {
 
     console.log('Weather: Updated sun times')
   }
+
+  async initiate(intervals: {
+    sunTimes: number
+    rain: number
+    tempAndWind: number
+  }) {
+    if (intervals.sunTimes > 0) {
+      this.updateSunTimes()
+      setInterval(() => this.updateSunTimes(), intervals.sunTimes)
+    }
+    if (intervals.rain > 0) {
+      await this.updateRainForecast()
+      setInterval(async () => await this.updateRainForecast(), intervals.rain)
+    }
+    if (intervals.tempAndWind > 0) {
+      await this.updateTempAndWind()
+      setInterval(
+        async () => await this.updateTempAndWind(),
+        intervals.tempAndWind
+      )
+    }
+  }
 }
 
 export default new Weather({
