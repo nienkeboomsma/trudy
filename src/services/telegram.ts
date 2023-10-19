@@ -18,14 +18,14 @@ class Telegram {
   sendMessage(message: string, options?: { markdown?: boolean }) {
     const markdown = options?.markdown ?? false
 
-    console.log('Telegram: Sending message')
+    console.log(new Date(), 'Telegram: Sending message')
     this.bot.sendMessage(this.chatId, message, {
       parse_mode: markdown ? 'MarkdownV2' : 'HTML',
     })
   }
 
   listenFor(regexp: RegExp, callback: () => void) {
-    console.log(`Telegram: Listening for ${regexp}`)
+    console.log(new Date(), `Telegram: Listening for ${regexp}`)
     this.bot.onText(regexp, callback)
   }
 }
