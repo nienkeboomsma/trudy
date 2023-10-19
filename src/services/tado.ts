@@ -22,9 +22,9 @@ class Tado {
   async login() {
     try {
       await this.api.login(this.username, this.password)
-      console.log('Tado: Logged in')
+      console.log(new Date(), 'Tado: Logged in')
     } catch (err) {
-      throw err
+      console.log(new Date(), 'Tado: Failed to log in', err)
     }
   }
 
@@ -37,9 +37,9 @@ class Tado {
         return zone ? { id: zoneId, name: zone.name } : []
       })
       this.zones = zones
-      console.log('Tado: Created zones list')
+      console.log(new Date(), 'Tado: Created zones list')
     } catch (err) {
-      throw err
+      console.log(new Date(), 'Tado: Failed to create zones list', err)
     }
   }
 
@@ -53,7 +53,11 @@ class Tado {
         this.temperatures[zone.name] =
           zoneData.sensorDataPoints.insideTemperature.celsius
       } catch (err) {
-        throw err
+        console.log(
+          new Date(),
+          'Tado: Failed to update indoor temperatures',
+          err
+        )
       }
     }
 
@@ -61,7 +65,7 @@ class Tado {
     const totalTemp = temperatures.reduce((sum, current) => sum + current)
     this.temperatures.average = totalTemp / temperatures.length
 
-    console.log('Tado: Updated temperatures')
+    console.log(new Date(), 'Tado: Updated indoor temperatures')
   }
 
   async initiate(interval: number) {

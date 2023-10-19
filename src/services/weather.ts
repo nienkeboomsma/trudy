@@ -36,9 +36,13 @@ class Weather {
 
       this.weather.temperature = data.liveweer[0].temp
       this.weather.wind = data.liveweer[0].windkmh
-      console.log('Weather: Updated temperature and wind speed')
+      console.log(new Date(), 'Weather: Updated temperature and wind speed')
     } catch (err) {
-      console.log('Weather: Failed to get temperature and wind', err)
+      console.log(
+        new Date(),
+        'Weather: Failed to update temperature and wind speed',
+        err
+      )
     }
   }
 
@@ -56,9 +60,9 @@ class Weather {
         .slice(0, -1)
 
       this.weather.rain = cleanData
-      console.log('Weather: Updated rain forecast')
+      console.log(new Date(), 'Weather: Updated rain forecast')
     } catch (err) {
-      console.log('Weather: Failed to get rain forecast', err)
+      console.log(new Date(), 'Weather: Failed to update rain forecast', err)
     }
   }
 
@@ -105,7 +109,7 @@ class Weather {
     ).dusk
     this.sunTimes.lastUpdated = currentDate
 
-    console.log('Weather: Updated sun times')
+    console.log(new Date(), 'Weather: Updated sun times')
   }
 
   async initiate(intervals: {
