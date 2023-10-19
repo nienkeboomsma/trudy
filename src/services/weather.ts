@@ -7,10 +7,18 @@ interface WeatherOptions {
   weerliveKey: string
 }
 
-interface WeatherType {
+interface SunTimes {
+  dawn: Date
+  screensDown: Date
+  screensUp: Date
+  dusk: Date
+  lastUpdated: Date
+}
+
+interface Weather {
   temperature: number
   wind: number
-  rain: Record<string, number>[]
+  rain: Array<{ minutesFromNow: number; intensity: number }>
 }
 
 class Weather {
@@ -24,8 +32,8 @@ class Weather {
     this.weerliveKey = options.weerliveKey
   }
 
-  sunTimes: Record<string, Date> = {}
-  weather: WeatherType = {} as WeatherType
+  sunTimes: SunTimes = {} as SunTimes // is there any way around this?
+  weather: Weather = {} as Weather // is there any way around this?
 
   async updateTempAndWind() {
     try {
@@ -55,7 +63,10 @@ class Weather {
       const cleanData = data
         .split(/\r\n/)
         .map((e, index) => {
-          return { minutesFromNow: index * 5, rain: Number(e.split('|')[0]) }
+          return {
+            minutesFromNow: index * 5,
+            intensity: Number(e.split('|')[0]),
+          }
         })
         .slice(0, -1)
 
