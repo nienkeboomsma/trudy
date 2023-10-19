@@ -1,7 +1,5 @@
 import 'dotenv/config'
-import tado from './services/tado'
-import telegram from './services/telegram'
-import weather from './services/weather'
+import { tado, weather } from './services'
 import { settings } from './config'
 
 const startApp = async () => {
