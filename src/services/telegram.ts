@@ -25,7 +25,10 @@ class Telegram {
   }
 
   listenFor(regexp: RegExp, callback: () => void) {
-    console.log(new Date(), `Telegram: Listening for ${regexp}`)
+    console.log(
+      new Date(),
+      `Telegram: Listening for ${regexp.toString().slice(2, -1)}`
+    )
     this.bot.onText(regexp, callback)
   }
 }

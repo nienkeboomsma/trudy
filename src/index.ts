@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { tado, weather } from './services'
-import { windows, scheduledMessages, screens } from './modules'
+import { windows, scheduledMessages, screens, commands } from './modules'
 import { settings } from './config'
 
 const startApp = async () => {
@@ -22,6 +22,8 @@ const startApp = async () => {
     checkSunTimes: settings.updateFrequencies.screens.checkSunTimes,
     checkWindAndRain: settings.updateFrequencies.screens.checkWindAndRain,
   })
+
+  commands.temps()
 }
 
 startApp()
