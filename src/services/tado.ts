@@ -63,7 +63,8 @@ class Tado {
 
     const temperatures = Object.values(this.temperatures)
     const totalTemp = temperatures.reduce((sum, current) => sum + current)
-    this.temperatures.average = totalTemp / temperatures.length
+    const averageTemp = totalTemp / temperatures.length
+    this.temperatures.average = Number(averageTemp.toFixed(1))
 
     console.log(new Date(), 'Tado: Updated indoor temperatures')
   }
