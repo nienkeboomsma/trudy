@@ -5,12 +5,12 @@ class Windows {
 
   toggleWindows() {
     telegram.sendMessage(
-      this.windowsOpen ? '☀️ Close the windows! ☀️' : '🌙 Open the windows! 🌙'
+      this.windowsOpen ? '🔥 Close the windows! 🔥' : '❄️ Open the windows! ❄️'
     )
     this.windowsOpen = !this.windowsOpen
   }
 
-  compareTemperatures() {
+  checkTemperatures() {
     const warmerIndoors =
       tado.temperatures.average > weather.weather.temperature
 
@@ -32,8 +32,8 @@ class Windows {
 
   initiate(interval: number) {
     if (interval > 0) {
-      this.compareTemperatures()
-      setInterval(() => this.compareTemperatures(), interval)
+      this.checkTemperatures()
+      setInterval(() => this.checkTemperatures(), interval)
     }
   }
 }
