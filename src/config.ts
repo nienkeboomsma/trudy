@@ -30,7 +30,7 @@ export const settings = {
   screens: {
     morningAzimuth: 125, // 125
     eveningAzimuth: 275, // 275
-    maxAcceptableWind: 40, // 0
+    maxAcceptableWind: 40, // 40
     maxAcceptableRain: 0, // 0
   },
   updateFrequencies: {
@@ -49,7 +49,7 @@ export const settings = {
       checkMessageList: 1 * minute, // 1min
     },
     screens: {
-      setDailyReminders: 6 * hour, // 6h
+      checkSunTimes: 1 * minute, // 1m
       checkWindAndRain: 5 * minute, // 5m
     },
   },
