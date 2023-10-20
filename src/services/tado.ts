@@ -6,6 +6,12 @@ interface TadoOptions {
   password: string
 }
 
+interface Zone {
+  id: number
+  name: string
+  temperature: number | null
+}
+
 class Tado {
   private username: string
   private password: string
@@ -16,8 +22,8 @@ class Tado {
     this.password = options.password
     this.api = new TadoAPI()
   }
-  zones: Array<{ id: number; name: string }> = []
-  temperatures: Record<string, number> = {}
+  zones: Array<Zone> = []
+  averageTemp: number | null = null
 
   async login() {
     try {
@@ -34,7 +40,7 @@ class Tado {
       const zonesData = await this.api.getZones(constants.TADO_HOME_ID)
       const zones = zoneIds.flatMap((zoneId) => {
         const zone = zonesData.find((zone) => zone.id === zoneId)
-        return zone ? { id: zoneId, name: zone.name } : []
+        return zone ? { id: zoneId, name: zone.name, temperature: null } : []
       })
       this.zones = zones
       console.log(new Date(), 'Tado: Created zones list')
@@ -43,30 +49,52 @@ class Tado {
     }
   }
 
-  async updateTemperatures() {
-    for (const zone of this.zones) {
-      try {
+  async updateZones() {
+    try {
+      let newZones: Array<Zone> = []
+      for (const zone of this.zones) {
         const zoneData = await this.api.getZoneState(
           constants.TADO_HOME_ID,
           zone.id
         )
-        this.temperatures[zone.name] =
-          zoneData.sensorDataPoints.insideTemperature.celsius
-      } catch (err) {
-        console.log(
-          new Date(),
-          'Tado: Failed to update indoor temperatures',
-          err
-        )
+        newZones = [
+          ...newZones,
+          {
+            ...zone,
+            temperature: zoneData.sensorDataPoints.insideTemperature.celsius,
+          },
+        ]
       }
+      this.zones = newZones
+
+      console.log(new Date(), 'Tado: Updated indoor temperatures')
+    } catch (err) {
+      console.log(new Date(), 'Tado: Failed to update indoor temperatures', err)
+    }
+  }
+
+  updateAverageTemp() {
+    const allTemperatures = this.zones
+      .map((zone) => zone.temperature)
+      .filter((temperature) => temperature !== null) as number[]
+
+    if (allTemperatures.length === 0) {
+      console.log(
+        new Date(),
+        'Tado: Failed to update average temperature, because all indoor temperatures are null'
+      )
+      return
     }
 
-    const temperatures = Object.values(this.temperatures)
-    const totalTemp = temperatures.reduce((sum, current) => sum + current)
-    const averageTemp = totalTemp / temperatures.length
-    this.temperatures.average = Number(averageTemp.toFixed(1))
+    const totalTemp = allTemperatures.reduce((sum, current) => sum + current)
+    const average = totalTemp / allTemperatures.length
+    this.averageTemp = Number(average.toFixed(1))
+    console.log(new Date(), 'Tado: Updated average temperature')
+  }
 
-    console.log(new Date(), 'Tado: Updated indoor temperatures')
+  async updateTemperatures() {
+    await this.updateZones()
+    this.updateAverageTemp()
   }
 
   async initiate(interval: number) {

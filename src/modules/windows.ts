@@ -11,8 +11,15 @@ class Windows {
   }
 
   checkTemperatures() {
-    const warmerIndoors =
-      tado.temperatures.average > weather.weather.temperature
+    if (tado.averageTemp === null) {
+      console.log(
+        new Date(),
+        'Windows: Failed to check temperatures, because the average temperature is null'
+      )
+      return
+    }
+
+    const warmerIndoors = tado.averageTemp > weather.weather.temperature
 
     if (
       (warmerIndoors && !this.windowsOpen) ||
@@ -20,7 +27,7 @@ class Windows {
     ) {
       console.log(
         new Date(),
-        `Windows: It is ${tado.temperatures.average}°C indoors and ${
+        `Windows: It is ${tado.averageTemp}°C indoors and ${
           weather.weather.temperature
         }°C outdoors; time to ${
           this.windowsOpen ? 'close' : 'open'
