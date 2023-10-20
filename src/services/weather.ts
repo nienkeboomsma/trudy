@@ -104,7 +104,7 @@ class Weather {
   updateSunTimes() {
     const currentDate = new Date()
 
-    if (this.sunTimes.lastUpdated?.getDate() === currentDate.getDate()) return
+    if (this.sunTimes.dawn?.getDate() === currentDate.getDate()) return
 
     this.sunTimes.dawn = SunCalc.getTimes(
       currentDate,
@@ -122,7 +122,6 @@ class Weather {
       this.latitude,
       this.longitude
     ).dusk
-    this.sunTimes.lastUpdated = currentDate
 
     console.log(new Date(), 'Weather: Updated sun times')
   }
