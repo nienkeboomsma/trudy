@@ -23,7 +23,7 @@ class Tado {
     this.api = new TadoAPI()
   }
   zones: Array<Zone> = []
-  averageTemp: number | null = null
+  averageTemp?: number
 
   async login() {
     try {
@@ -76,7 +76,9 @@ class Tado {
   updateAverageTemp() {
     const allTemperatures = this.zones
       .map((zone) => zone.temperature)
-      .filter((temperature) => temperature !== null) as number[]
+      .filter(
+        (temperature): temperature is number => typeof temperature === 'number'
+      )
 
     if (allTemperatures.length === 0) {
       console.log(

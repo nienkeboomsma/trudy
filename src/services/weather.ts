@@ -7,18 +7,11 @@ interface WeatherOptions {
   weerliveKey: string
 }
 
-interface SunTimes {
+export interface SunTimes {
   dawn: Date
   screensDown: Date
   screensUp: Date
   dusk: Date
-  lastUpdated: Date
-}
-
-interface Weather {
-  temperature: number
-  wind: number
-  rain: Array<{ minutesFromNow: number; intensity: number }>
 }
 
 class Weather {
@@ -32,8 +25,10 @@ class Weather {
     this.weerliveKey = options.weerliveKey
   }
 
-  sunTimes: SunTimes = {} as SunTimes // is there any way around this?
-  weather: Weather = {} as Weather // is there any way around this?
+  sunTimes?: SunTimes
+  temperature?: number
+  wind?: number
+  rain?: Array<{ minutesFromNow: number; intensity: number }>
 
   async updateTempAndWind() {
     try {
@@ -42,8 +37,8 @@ class Weather {
       )
       const data = await res.json()
 
-      this.weather.temperature = data.liveweer[0].temp
-      this.weather.wind = data.liveweer[0].windkmh
+      this.temperature = data.liveweer[0].temp
+      this.wind = data.liveweer[0].windkmh
       console.log(new Date(), 'Weather: Updated temperature and wind speed')
     } catch (err) {
       console.log(
@@ -70,7 +65,7 @@ class Weather {
         })
         .slice(0, -1)
 
-      this.weather.rain = cleanData
+      this.rain = cleanData
       console.log(new Date(), 'Weather: Updated rain forecast')
     } catch (err) {
       console.log(new Date(), 'Weather: Failed to update rain forecast', err)
@@ -104,24 +99,27 @@ class Weather {
   updateSunTimes() {
     const currentDate = new Date()
 
-    if (this.sunTimes.dawn?.getDate() === currentDate.getDate()) return
+    if (this.sunTimes?.dawn?.getDate() === currentDate.getDate()) return
 
-    this.sunTimes.dawn = SunCalc.getTimes(
+    const dawn = SunCalc.getTimes(
       currentDate,
       this.latitude,
       this.longitude
     ).dawn
-    this.sunTimes.screensDown = this.getTimeByAzimuth(
-      settings.screens.morningAzimuth
-    )
-    this.sunTimes.screensUp = this.getTimeByAzimuth(
-      settings.screens.eveningAzimuth
-    )
-    this.sunTimes.dusk = SunCalc.getTimes(
+    const screensDown = this.getTimeByAzimuth(settings.screens.morningAzimuth)
+    const screensUp = this.getTimeByAzimuth(settings.screens.eveningAzimuth)
+    const dusk = SunCalc.getTimes(
       currentDate,
       this.latitude,
       this.longitude
     ).dusk
+
+    this.sunTimes = {
+      dawn,
+      screensDown,
+      screensUp,
+      dusk,
+    }
 
     console.log(new Date(), 'Weather: Updated sun times')
   }

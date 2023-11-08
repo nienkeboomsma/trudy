@@ -15,15 +15,26 @@ class Screens {
   }
 
   checkSunTimes() {
+    if (!weather.sunTimes) {
+      console.log(
+        new Date(),
+        'Screens: Failed to check screens, because sun times are not defined'
+      )
+      return
+    }
+
     const now = new Date()
 
-    if (
-      (weather.sunTimes.screensDown < now &&
-        !this.screensDown &&
-        !this.determineRain() &&
-        !this.determineWind()) ||
-      (weather.sunTimes.screensUp < now && this.screensDown)
-    ) {
+    const screenShouldGoDown =
+      weather.sunTimes.screensDown < now &&
+      now < weather.sunTimes.screensUp &&
+      !this.screensDown &&
+      !this.determineRain() &&
+      !this.determineWind()
+    const screenShouldGoUp =
+      weather.sunTimes.screensUp < now && this.screensDown
+
+    if (screenShouldGoDown || screenShouldGoUp) {
       console.log(
         new Date(),
         `Screens: It is time to put the screens ${
@@ -34,17 +45,22 @@ class Screens {
     }
   }
 
-  determineRain() {
-    const windy = weather.weather.wind > settings.screens.maxAcceptableWind
+  determineWind() {
+    if (!weather.wind) return null
+
+    const windy = weather.wind > settings.screens.maxAcceptableWind
     return windy
   }
 
-  determineWind() {
-    const rainy = [1, 2].every(
-      (e) =>
-        weather.weather.rain[e].intensity > settings.screens.maxAcceptableRain
-    )
-    return rainy
+  determineRain() {
+    if (!weather.rain) return null
+
+    const after5min =
+      weather.rain[1].intensity > settings.screens.maxAcceptableRain
+    const after10min =
+      weather.rain[2].intensity > settings.screens.maxAcceptableRain
+
+    return after5min && after10min
   }
 
   checkWindAndRain() {
@@ -52,6 +68,14 @@ class Screens {
 
     const rainy = this.determineRain()
     const windy = this.determineWind()
+
+    if (rainy === null || windy === null) {
+      console.log(
+        new Date(),
+        'Screens: Failed to check for wind or rain, because wind or rain data is not defined'
+      )
+      return
+    }
 
     if (rainy || windy) {
       console.log(
