@@ -15,14 +15,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
-      - name: Install dependencies
-        run: npm install
       - name: Clean up old Docker container and image
         run: |
           docker stop trudy
           docker rm trudy
           docker image rm -f trudy
       - name: Build Docker image
-        run: npm run docker:build
+        run: docker build -t trudy .
       - name: Start Docker image
-        run: docker run --name=trudy -d --restart=always -e TADO_HOME_ID=${{ secrets.TADO_HOME_ID }} TADO_PASSWORD=${{ secrets.TADO_PASSWORD }} TADO_USERNAME=${{ secrets.TADO_USERNAME }} TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} LATITUDE=${{ secrets.LATITUDE }} LONGITUDE=${{ secrets.LONGITUDE }} METEOSERVER_KEY=${{ secrets.METEOSERVER_KEY }} WEERLIVE_KEY=${{ secrets.WEERLIVE_KEY }} trudy
+        run: docker run --name=trudy -d --restart=always -e TADO_HOME_ID=${{ secrets.TADO_HOME_ID }} -e TADO_PASSWORD=${{ secrets.TADO_PASSWORD }} -e TADO_USERNAME=${{ secrets.TADO_USERNAME }} -e TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} -e TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} -e LATITUDE=${{ secrets.LATITUDE }} -e LONGITUDE=${{ secrets.LONGITUDE }} -e METEOSERVER_KEY=${{ secrets.METEOSERVER_KEY }} -e WEERLIVE_KEY=${{ secrets.WEERLIVE_KEY }} trudy
