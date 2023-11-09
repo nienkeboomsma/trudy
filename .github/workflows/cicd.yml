@@ -1,0 +1,28 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main, github-actions]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Install dependencies
+        run: npm install
+      - name: Clean up old Docker container and image
+        run: |
+          docker stop trudy
+          docker rm trudy
+          docker image rm -f trudy
+      - name: Build Docker image
+        run: npm run docker:build
+      - name: Start Docker image
+        run: docker run --name=trudy -d --restart=always -e TADO_HOME_ID=${{ secrets.TADO_HOME_ID }} TADO_PASSWORD=${{ secrets.TADO_PASSWORD }} TADO_USERNAME=${{ secrets.TADO_USERNAME }} TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }} TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }} LATITUDE=${{ secrets.LATITUDE }} LONGITUDE=${{ secrets.LONGITUDE }} METEOSERVER_KEY=${{ secrets.METEOSERVER_KEY }} WEERLIVE_KEY=${{ secrets.WEERLIVE_KEY }} trudy
