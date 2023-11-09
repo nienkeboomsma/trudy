@@ -4,7 +4,8 @@
   "scripts": {
     "start": "ts-node ./src/index.ts",
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "docker:build": "docker build -t trudy ."
   },
   "devDependencies": {
     "@types/jest": "^26.0.24",
