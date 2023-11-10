@@ -55,12 +55,9 @@ class Screens {
   determineRain() {
     if (!weather.rain) return null
 
-    const after5min =
-      weather.rain[1].intensity > settings.screens.maxAcceptableRain
-    const after10min =
-      weather.rain[2].intensity > settings.screens.maxAcceptableRain
-
-    return after5min && after10min
+    const nextHour = weather.rain.slice(0, 12)
+    const rainInNextHour = nextHour.filter((e) => e.intensity > 0).length > 0
+    return rainInNextHour
   }
 
   checkWindAndRain() {
