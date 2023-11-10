@@ -33,7 +33,7 @@ class Commands {
     const createSunTimeString = (line: SunTime) => {
       return (
         line.title.padEnd(14, ' ') +
-        weather.sunTimes?.[line.propertyName].toLocaleTimeString('en-GB') +
+        weather.sunTimes?.[line.propertyName].toLocaleTimeString('en-NL') +
         '\n'
       )
     }
