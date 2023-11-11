@@ -3,8 +3,6 @@ name: CI/CD
 on:
   push:
     branches: [main, github-actions]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -17,9 +15,9 @@ jobs:
         uses: actions/checkout@v4.1.1
       - name: Clean up old Docker container and image
         run: |
-          docker stop trudy
-          docker rm trudy
-          docker image rm -f trudy
+          docker stop trudy || :
+          docker rm trudy || :
+          docker image rm -f trudy || :
       - name: Build Docker image
         run: docker build -t trudy .
       - name: Start Docker image
