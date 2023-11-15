@@ -3,9 +3,9 @@ import { scheduledMessages } from '../modules'
 import { settings } from '../config'
 
 class Screens {
-  screensDown: boolean = false
+  private screensDown: boolean = false
 
-  toggleScreens() {
+  private toggleScreens() {
     telegram.sendMessage(
       this.screensDown
         ? '🌙 Put the screens up! 🌙'
@@ -14,8 +14,10 @@ class Screens {
     this.screensDown = !this.screensDown
   }
 
-  checkSunTimes() {
-    if (!weather.sunTimes) {
+  private checkSunTimes() {
+    const sunTimes = weather.getSunTimes()
+
+    if (!sunTimes) {
       console.log(
         new Date(),
         'Screens: Failed to check screens, because sun times are not defined'
@@ -26,13 +28,12 @@ class Screens {
     const now = new Date()
 
     const screenShouldGoDown =
-      weather.sunTimes.screensDown < now &&
-      now < weather.sunTimes.screensUp &&
+      sunTimes.screensDown < now &&
+      now < sunTimes.screensUp &&
       !this.screensDown &&
       !this.determineRain() &&
       !this.determineWind()
-    const screenShouldGoUp =
-      weather.sunTimes.screensUp < now && this.screensDown
+    const screenShouldGoUp = sunTimes.screensUp < now && this.screensDown
 
     if (screenShouldGoDown || screenShouldGoUp) {
       console.log(
@@ -45,22 +46,26 @@ class Screens {
     }
   }
 
-  determineWind() {
-    if (!weather.wind) return null
+  private determineWind() {
+    const wind = weather.getWind()
 
-    const windy = weather.wind > settings.screens.maxAcceptableWind
+    if (!wind) return null
+
+    const windy = wind > settings.screens.maxAcceptableWind
     return windy
   }
 
-  determineRain() {
-    if (!weather.rain) return null
+  private determineRain() {
+    const rain = weather.getRain()
 
-    const nextHour = weather.rain.slice(0, 12)
+    if (!rain) return null
+
+    const nextHour = rain.slice(0, 12)
     const rainInNextHour = nextHour.filter((e) => e.intensity > 0).length > 0
     return rainInNextHour
   }
 
-  checkWindAndRain() {
+  private checkWindAndRain() {
     if (!this.screensDown) return
 
     const rainy = this.determineRain()
@@ -91,7 +96,7 @@ class Screens {
     }
   }
 
-  async initiate(intervals: {
+  public async initiate(intervals: {
     checkSunTimes: number
     checkWindAndRain: number
   }) {

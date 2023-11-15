@@ -6,11 +6,11 @@ interface TadoOptions {
   password: string
 }
 
-interface Zone {
+type Zone = Readonly<{
   id: number
   name: string
   temperature: number | null
-}
+}>
 
 class Tado {
   private username: string
@@ -22,10 +22,18 @@ class Tado {
     this.password = options.password
     this.api = new TadoAPI()
   }
-  zones: Array<Zone> = []
-  averageTemp?: number
+  private zones: ReadonlyArray<Zone> = []
+  private averageTemp?: number
 
-  async login() {
+  public getZones() {
+    return this.zones
+  }
+
+  public getAverageTemp() {
+    return this.averageTemp
+  }
+
+  private async login() {
     try {
       await this.api.login(this.username, this.password)
       console.log(new Date(), 'Tado: Logged in')
@@ -34,7 +42,7 @@ class Tado {
     }
   }
 
-  async createZonesList() {
+  private async createZonesList() {
     const zoneIds = constants.TADO_ZONES
     try {
       const zonesData = await this.api.getZones(constants.TADO_HOME_ID)
@@ -49,7 +57,7 @@ class Tado {
     }
   }
 
-  async updateZones() {
+  private async updateZones() {
     try {
       let newZones: Array<Zone> = []
       for (const zone of this.zones) {
@@ -73,7 +81,7 @@ class Tado {
     }
   }
 
-  updateAverageTemp() {
+  private updateAverageTemp() {
     const allTemperatures = this.zones
       .map((zone) => zone.temperature)
       .filter(
@@ -94,12 +102,12 @@ class Tado {
     console.log(new Date(), 'Tado: Updated average temperature')
   }
 
-  async updateTemperatures() {
+  private async updateTemperatures() {
     await this.updateZones()
     this.updateAverageTemp()
   }
 
-  async initiate(interval: number) {
+  public async initiate(interval: number) {
     if (interval > 0) {
       await this.login()
       await this.createZonesList()

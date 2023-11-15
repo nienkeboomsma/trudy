@@ -15,7 +15,7 @@ class Telegram {
     this.chatId = options.chatId
   }
 
-  sendMessage(message: string, options?: { markdown?: boolean }) {
+  public sendMessage(message: string, options?: { markdown?: boolean }) {
     const markdown = options?.markdown ?? false
 
     console.log(new Date(), `Telegram: Sending '${message}'`)
@@ -24,7 +24,7 @@ class Telegram {
     })
   }
 
-  listenFor(regexp: RegExp, callback: () => void) {
+  public listenFor(regexp: RegExp, callback: () => void) {
     console.log(
       new Date(),
       `Telegram: Listening for ${regexp.toString().slice(2, -1)}`

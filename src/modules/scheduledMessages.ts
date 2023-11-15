@@ -1,14 +1,14 @@
 import { telegram } from '../services'
 
-interface ScheduledMessage {
+type ScheduledMessage = Readonly<{
   dateAndTime: Date
   content: string
-}
+}>
 
 class ScheduledMessages {
-  messageList: Array<ScheduledMessage> = []
+  private messageList: ReadonlyArray<ScheduledMessage> = []
 
-  scheduleMessage(message: ScheduledMessage) {
+  public scheduleMessage(message: ScheduledMessage) {
     const messageAlreadyExists = this.messageList.some(
       (e) =>
         e.content === message.content && e.dateAndTime === message.dateAndTime
@@ -25,7 +25,7 @@ class ScheduledMessages {
     )
   }
 
-  cancelMessage(message: ScheduledMessage) {
+  public cancelMessage(message: ScheduledMessage) {
     this.messageList = this.messageList.filter(
       (e) =>
         e.content !== message.content && e.dateAndTime !== message.dateAndTime
@@ -36,7 +36,7 @@ class ScheduledMessages {
     )
   }
 
-  checkmessageList() {
+  private checkmessageList() {
     const now = new Date()
     this.messageList.forEach((message) => {
       if (message.dateAndTime < now) {
@@ -50,7 +50,7 @@ class ScheduledMessages {
     })
   }
 
-  initiate(interval: number) {
+  public initiate(interval: number) {
     if (interval > 0) {
       this.checkmessageList()
       setInterval(() => this.checkmessageList(), interval)
