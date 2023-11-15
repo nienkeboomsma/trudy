@@ -21,8 +21,10 @@ const winterTimeItems: Array<SunTime> = [
 const wrapInCodeBlock = (str: string) => '```\n' + str + '```'
 
 class Commands {
-  sendSunTimes() {
-    if (!weather.sunTimes) {
+  private sendSunTimes() {
+    const sunTimes = weather.getSunTimes()
+
+    if (!sunTimes) {
       console.log(
         new Date(),
         'Commands: could not send sun times, because they are not defined'
@@ -33,7 +35,7 @@ class Commands {
     const createSunTimeString = (line: SunTime) => {
       return (
         line.title.padEnd(14, ' ') +
-        weather.sunTimes?.[line.propertyName].toLocaleTimeString('en-NL') +
+        sunTimes[line.propertyName].toLocaleTimeString('en-NL') +
         '\n'
       )
     }
@@ -50,26 +52,29 @@ class Commands {
     telegram.sendMessage(message, { markdown: true })
   }
 
-  sun() {
+  public sun() {
     telegram.listenFor(/\/sun/, this.sendSunTimes)
   }
 
-  sendTemperatures() {
-    const zoneStrings = tado.zones.map(
+  private sendTemperatures() {
+    const zones = tado.getZones()
+    const zoneStrings = zones.map(
       (zone) => `${zone.name.padEnd(14, ' ')}${zone.temperature}`
     )
 
+    const averageIndoorTemp = tado.getAverageTemp()
+    const outdoorTemp = weather.getTemperature()
     let averageTempString = ''
 
-    if (tado.averageTemp && weather.temperature) {
+    if (averageIndoorTemp && outdoorTemp) {
       averageTempString =
-        tado.averageTemp > weather.temperature
+        averageIndoorTemp > outdoorTemp
           ? "\n\nIt's currently warmer indoors 🌙"
           : "\n\nIt's currently warmer outdoors ☀️"
     }
 
     const message = wrapInCodeBlock(
-      `Outdoors      ${weather.temperature}
+      `Outdoors      ${outdoorTemp}
 
 ${zoneStrings.join('\n')}${averageTempString}`
     )
@@ -77,8 +82,9 @@ ${zoneStrings.join('\n')}${averageTempString}`
     telegram.sendMessage(message, { markdown: true })
   }
 
-  temps() {
+  public temps() {
     telegram.listenFor(/\/temps/, this.sendTemperatures)
   }
 }
+
 export default new Commands()

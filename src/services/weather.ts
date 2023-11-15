@@ -14,6 +14,11 @@ export interface SunTimes {
   dusk: Date
 }
 
+interface RainEntry {
+  readonly minutesFromNow: number
+  readonly intensity: number
+}
+
 class Weather {
   private latitude: number
   private longitude: number
@@ -25,12 +30,28 @@ class Weather {
     this.weerliveKey = options.weerliveKey
   }
 
-  sunTimes?: SunTimes
-  temperature?: number
-  wind?: number
-  rain?: Array<{ minutesFromNow: number; intensity: number }>
+  private sunTimes?: SunTimes
+  private temperature?: number
+  private wind?: number
+  private rain?: Array<RainEntry>
 
-  async updateTempAndWind() {
+  public getSunTimes(): Readonly<SunTimes> | undefined {
+    return this.sunTimes
+  }
+
+  public getTemperature() {
+    return this.temperature
+  }
+
+  public getWind() {
+    return this.wind
+  }
+
+  public getRain(): ReadonlyArray<RainEntry> | undefined {
+    return this.rain
+  }
+
+  private async updateTempAndWind() {
     try {
       const res = await fetch(
         `https://weerlive.nl/api/json-data-10min.php?key=${this.weerliveKey}&locatie=${this.latitude},${this.longitude}`
@@ -49,7 +70,7 @@ class Weather {
     }
   }
 
-  async updateRainForecast() {
+  private async updateRainForecast() {
     try {
       const res = await fetch(
         `https://gpsgadget.buienradar.nl/data/raintext/?lat=${this.latitude}&lon=${this.longitude}`
@@ -72,7 +93,7 @@ class Weather {
     }
   }
 
-  getAzimuthByTime(timeAndDate: Date) {
+  private getAzimuthByTime(timeAndDate: Date) {
     const azimuth = SunCalc.getPosition(
       timeAndDate,
       this.latitude,
@@ -81,7 +102,7 @@ class Weather {
     return azimuth * (180 / Math.PI) + 180
   }
 
-  getTimeByAzimuth(desiredAzimuth: number) {
+  private getTimeByAzimuth(desiredAzimuth: number) {
     const timeToCheck = new Date()
     timeToCheck.setHours(10)
     timeToCheck.setMinutes(0)
@@ -96,7 +117,7 @@ class Weather {
     return timeToCheck
   }
 
-  updateSunTimes() {
+  private updateSunTimes() {
     const currentDate = new Date()
 
     if (this.sunTimes?.dawn?.getDate() === currentDate.getDate()) return
@@ -124,7 +145,7 @@ class Weather {
     console.log(new Date(), 'Weather: Updated sun times')
   }
 
-  async initiate(intervals: {
+  public async initiate(intervals: {
     updateSunTimes: number
     updateRainForecast: number
     updateTempAndWind: number

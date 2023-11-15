@@ -1,24 +1,27 @@
 import { tado, telegram, weather } from '../services'
 
 class Windows {
-  windowsOpen: boolean = false
+  private windowsOpen: boolean = false
 
-  toggleWindows() {
+  private toggleWindows() {
     telegram.sendMessage(
       this.windowsOpen ? '🔥 Close the windows! 🔥' : '❄️ Open the windows! ❄️'
     )
     this.windowsOpen = !this.windowsOpen
   }
 
-  checkTemperatures() {
-    if (!tado.averageTemp) {
+  private checkTemperatures() {
+    const averageIndoorTemp = tado.getAverageTemp()
+    const outdoorTemp = weather.getTemperature()
+
+    if (!averageIndoorTemp) {
       console.log(
         new Date(),
         'Windows: Failed to check temperatures, because the average temperature is not defined'
       )
       return
     }
-    if (!weather.temperature) {
+    if (!outdoorTemp) {
       console.log(
         new Date(),
         'Windows: Failed to check temperatures, because the outdoor temperature is not defined'
@@ -26,7 +29,7 @@ class Windows {
       return
     }
 
-    const warmerIndoors = tado.averageTemp > weather.temperature
+    const warmerIndoors = averageIndoorTemp > outdoorTemp
 
     if (
       (warmerIndoors && !this.windowsOpen) ||
@@ -34,9 +37,7 @@ class Windows {
     ) {
       console.log(
         new Date(),
-        `Windows: It is ${tado.averageTemp}°C indoors and ${
-          weather.temperature
-        }°C outdoors; time to ${
+        `Windows: It is ${averageIndoorTemp}°C indoors and ${outdoorTemp}°C outdoors; time to ${
           this.windowsOpen ? 'close' : 'open'
         } the windows`
       )
@@ -44,7 +45,7 @@ class Windows {
     }
   }
 
-  initiate(interval: number) {
+  public initiate(interval: number) {
     if (interval > 0) {
       this.checkTemperatures()
       setInterval(() => this.checkTemperatures(), interval)
