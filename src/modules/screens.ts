@@ -14,6 +14,10 @@ class Screens {
     this.moduleIsActivated = false
   }
 
+  public getActivationStatus() {
+    return this.moduleIsActivated
+  }
+
   private toggleScreens() {
     telegram.sendMessage(
       this.screensDown

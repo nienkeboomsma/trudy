@@ -7,14 +7,14 @@ type SunTime = {
   propertyName: keyof SunTimes
 }
 
-const sunTimeItems: Array<SunTime> = [
+const heatWaveOnItems: Array<SunTime> = [
   { title: 'Dawn', propertyName: 'dawn' },
   { title: 'Screens down', propertyName: 'screensDown' },
   { title: 'Screens up', propertyName: 'screensUp' },
   { title: 'Dusk', propertyName: 'dusk' },
 ]
 
-const winterTimeItems: Array<SunTime> = [
+const heatWaveOffItems: Array<SunTime> = [
   { title: 'Dawn', propertyName: 'dawn' },
   { title: 'Dusk', propertyName: 'dusk' },
 ]
@@ -99,10 +99,9 @@ class Commands {
       )
     }
 
-    const items =
-      settings.updateFrequencies.screens.checkSunTimes === 0
-        ? winterTimeItems
-        : sunTimeItems
+    const items = screens.getActivationStatus()
+      ? heatWaveOnItems
+      : heatWaveOffItems
 
     const message = wrapInCodeBlock(
       items.map((item) => createSunTimeString(item)).join('')
