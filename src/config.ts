@@ -31,7 +31,6 @@ export const settings = {
     morningAzimuth: 125, // 125
     eveningAzimuth: 275, // 275
     maxAcceptableWind: 40, // 40
-    maxAcceptableRain: 0, // 0
   },
   updateFrequencies: {
     tado: {

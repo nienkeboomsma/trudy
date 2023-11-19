@@ -23,6 +23,8 @@ const startApp = async () => {
     checkWindAndRain: settings.updateFrequencies.screens.checkWindAndRain,
   })
 
+  commands.heatwaveOff()
+  commands.heatwaveOn()
   commands.sun()
   commands.temps()
 }

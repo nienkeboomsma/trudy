@@ -1,7 +1,16 @@
 import { tado, telegram, weather } from '../services'
 
 class Windows {
+  private moduleIsActivated: boolean = false
   private windowsOpen: boolean = false
+
+  public activate() {
+    this.moduleIsActivated = true
+  }
+
+  public deactivate() {
+    this.moduleIsActivated = false
+  }
 
   private toggleWindows() {
     telegram.sendMessage(
@@ -11,6 +20,8 @@ class Windows {
   }
 
   private checkTemperatures() {
+    if (!this.moduleIsActivated) return
+
     const averageIndoorTemp = tado.getAverageTemp()
     const outdoorTemp = weather.getTemperature()
 

@@ -3,7 +3,16 @@ import { scheduledMessages } from '../modules'
 import { settings } from '../config'
 
 class Screens {
+  private moduleIsActivated: boolean = false
   private screensDown: boolean = false
+
+  public activate() {
+    this.moduleIsActivated = true
+  }
+
+  public deactivate() {
+    this.moduleIsActivated = false
+  }
 
   private toggleScreens() {
     telegram.sendMessage(
@@ -15,6 +24,8 @@ class Screens {
   }
 
   private checkSunTimes() {
+    if (!this.moduleIsActivated) return
+
     const sunTimes = weather.getSunTimes()
 
     if (!sunTimes) {
@@ -66,6 +77,7 @@ class Screens {
   }
 
   private checkWindAndRain() {
+    if (!this.moduleIsActivated) return
     if (!this.screensDown) return
 
     const rainy = this.determineRain()

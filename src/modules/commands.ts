@@ -1,3 +1,4 @@
+import { screens, windows } from '../modules'
 import { tado, telegram, weather, SunTimes } from '../services'
 import { settings } from '../config'
 
@@ -84,6 +85,26 @@ ${zoneStrings.join('\n')}${averageTempString}`
 
   public temps() {
     telegram.listenFor(/\/temps/, this.sendTemperatures)
+  }
+
+  private startHeatwaveMode() {
+    screens.activate()
+    windows.activate()
+    telegram.sendMessage('Heatwave mode activated')
+  }
+
+  public heatwaveOn() {
+    telegram.listenFor(/\/heatwave\son/, this.startHeatwaveMode)
+  }
+
+  private endHeatwaveMode() {
+    screens.deactivate()
+    windows.deactivate()
+    telegram.sendMessage('Heatwave mode deactivated')
+  }
+
+  public heatwaveOff() {
+    telegram.listenFor(/\/heatwave\soff/, this.endHeatwaveMode)
   }
 }
 
