@@ -25,6 +25,7 @@ const startApp = async () => {
 
   commands.heatwaveOff()
   commands.heatwaveOn()
+  commands.rain()
   commands.sun()
   commands.temps()
 }

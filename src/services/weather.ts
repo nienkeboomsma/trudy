@@ -14,7 +14,7 @@ export interface SunTimes {
   dusk: Date
 }
 
-interface RainEntry {
+export interface RainEntry {
   readonly minutesFromNow: number
   readonly intensity: number
 }
