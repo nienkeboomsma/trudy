@@ -39,6 +39,7 @@ class Tado {
       console.log(new Date(), 'Tado: Logged in')
     } catch (err) {
       console.log(new Date(), 'Tado: Failed to log in', err)
+      process.exit(1)
     }
   }
 
@@ -54,6 +55,7 @@ class Tado {
       console.log(new Date(), 'Tado: Created zones list')
     } catch (err) {
       console.log(new Date(), 'Tado: Failed to create zones list', err)
+      process.exit(1)
     }
   }
 
