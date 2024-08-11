@@ -163,6 +163,28 @@ ${zoneStrings.join('\n')}${averageTempString}`
   public heatwaveOff() {
     telegram.listenFor(/\/heatwave\soff/, this.endHeatwaveMode)
   }
+
+  private sendHelp() {
+    const message = `
+\`/temps\`
+Show current temperatures
+
+\`/rain\`
+Show rain forecast
+
+\`/sun\`
+Show sun times
+
+\`/heatwave [on/off]\`
+Turn heatwave mode on or off
+    `
+
+    telegram.sendMessage(message, { markdown: true })
+  }
+
+  public help() {
+    telegram.listenFor(/\/help/, this.sendHelp)
+  }
 }
 
 export default new Commands()

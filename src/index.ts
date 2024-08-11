@@ -28,6 +28,7 @@ const startApp = async () => {
   commands.rain()
   commands.sun()
   commands.temps()
+  commands.help()
 }
 
 startApp()
